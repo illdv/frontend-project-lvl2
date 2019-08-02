@@ -1,7 +1,7 @@
 {
   "name": "difference-calculator",
   "version": "1.0.0",
-  "description": "second Hexlet project",
+  "description": "Compares two configuration files and shows a difference",
   "bin": {
     "gendiff": "dist/bin/index.js"
   },
@@ -15,7 +15,7 @@
     "learn project"
   ],
   "scripts": {
-    "start": "npx babel-node src/bin/brain-progression.js",
+    "start": "npx babel-node src/bin/index.js",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run build"
   },
@@ -27,9 +27,12 @@
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "babel-eslint": "^10.0.2",
-    "eslint": "^6.1.0",
+    "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.18.2"
+  },
+  "dependencies": {
+    "commander": "^2.20.0"
   }
 }
