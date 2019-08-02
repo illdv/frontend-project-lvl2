@@ -1,0 +1,35 @@
+{
+  "name": "difference-calculator",
+  "version": "1.0.0",
+  "description": "second Hexlet project",
+  "bin": {
+    "gendiff": "dist/bin/index.js"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/illdv/frontend-project-lvl2.git"
+  },
+  "keywords": [
+    "differrence calculator",
+    "learn project"
+  ],
+  "scripts": {
+    "start": "npx babel-node src/bin/brain-progression.js",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "Kirill Dvoynikov",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.18.2"
+  }
+}
