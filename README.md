@@ -13,3 +13,5 @@ make publish
 
 sudo npm link
 ```
+
+[![asciicast](https://asciinema.org/a/uUQZE6Sm96DqfwTaZ4lvY0U2o.svg)](https://asciinema.org/a/uUQZE6Sm96DqfwTaZ4lvY0U2o)
