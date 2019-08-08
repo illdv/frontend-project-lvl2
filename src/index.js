@@ -1,5 +1,6 @@
 import { has } from 'lodash';
-import fs from 'fs';
+import parser from './parsers';
+
 
 const propertyOperations = [
   {
@@ -57,16 +58,15 @@ const render = (data) => {
     .reduce((acc, {
       type, key, sign, signs, value, values,
     }) => {
-      const bindKeyOnLine = buildLine(key);
+      const bindKey = buildLine(key);
       return [...acc, type === 'updated'
-        ? [...getValues(signs, values, bindKeyOnLine)]
-        : bindKeyOnLine(sign, value)];
+        ? [...getValues(signs, values, bindKey)]
+        : bindKey(sign, value)];
     }, []);
   return `{\n${[...result]}\n}`.replace(/,/gi, '\n');
 };
 
 export default (pathToFile1, pathToFile2) => {
-  const data1 = JSON.parse(fs.readFileSync(pathToFile1, { encoding: 'utf-8' }));
-  const data2 = JSON.parse(fs.readFileSync(pathToFile2, { encoding: 'utf-8' }));
-  return render(buildAst(data1, data2));
+  const ast = buildAst(...parser([pathToFile1, pathToFile2]));
+  return render(ast);
 };

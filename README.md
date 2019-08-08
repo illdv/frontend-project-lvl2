@@ -13,5 +13,7 @@ make publish
 
 sudo npm link
 ```
-
+demo for json
 [![asciicast](https://asciinema.org/a/uUQZE6Sm96DqfwTaZ4lvY0U2o.svg)](https://asciinema.org/a/uUQZE6Sm96DqfwTaZ4lvY0U2o)
+demo for yaml
+[![asciicast](https://asciinema.org/a/sTYw0HVciBIGz7QbEIl66jCuQ.svg)](https://asciinema.org/a/sTYw0HVciBIGz7QbEIl66jCuQ)
