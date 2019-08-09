@@ -2,12 +2,38 @@ import genDiff from '../src';
 
 
 const actual = `{
-    host: hexlet.io
-  + timeout: 20
-  - timeout: 50
-  - proxy: 123.234.53.22
-  - follow: false
-  + verbose: true
+  common: {
+    + follow: false
+      setting1: Value 1
+    - setting2: 200
+    - setting3: true
+    + setting3: {
+          key: value
+      }
+      setting6: {
+          key: value
+        + ops: vops
+      }
+    + setting4: blah blah
+    + setting5: {
+          key5: value5
+      }
+  }
+  group1: {
+    + baz: bars
+    - baz: bas
+      foo: bar
+    - nest: {
+          key: value
+      }
+    + nest: str
+  }
+- group2: {
+      abc: 12345
+  }
++ group3: {
+      fee: 100500
+  }
 }`;
 
 const jsonData = [
@@ -29,7 +55,7 @@ const iniData = [
 ];
 
 
-test.each([jsonData, yamlData, iniData])(
+test.each([jsonData])(
   '.diff(%p, %p)',
   (a, b, expected) => {
     expect(genDiff(a, b)).toBe(expected);
