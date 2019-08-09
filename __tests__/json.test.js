@@ -1,30 +1,37 @@
 import genDiff from '../src';
 
 
-const afterJSONPath = `${__dirname}/__fixtures__/after.json`;
-const beforeJSONPath = `${__dirname}/__fixtures__/before.json`;
-
-const afterYAMLPath = `${__dirname}/__fixtures__/after.yaml`;
-const beforeYAMLPath = `${__dirname}/__fixtures__/before.yaml`;
-
-test('json diff', () => {
-  expect(genDiff(beforeJSONPath, afterJSONPath)).toBe(`{
+const actual = `{
     host: hexlet.io
   + timeout: 20
   - timeout: 50
   - proxy: 123.234.53.22
   - follow: false
   + verbose: true
-}`);
-});
+}`;
 
-test('yaml diff', () => {
-  expect(genDiff(beforeYAMLPath, afterYAMLPath)).toBe(`{
-    host: hexlet.io
-  + timeout: 20
-  - timeout: 50
-  - proxy: 123.234.53.22
-  - follow: false
-  + verbose: true
-}`);
-});
+const jsonData = [
+  `${__dirname}/__fixtures__/before.json`,
+  `${__dirname}/__fixtures__/after.json`,
+  actual,
+];
+
+const yamlData = [
+  `${__dirname}/__fixtures__/before.yaml`,
+  `${__dirname}/__fixtures__/after.yaml`,
+  actual,
+];
+
+const iniData = [
+  `${__dirname}/__fixtures__/before.ini`,
+  `${__dirname}/__fixtures__/after.ini`,
+  actual,
+];
+
+
+test.each([jsonData, yamlData, iniData])(
+  '.diff(%p, %p)',
+  (a, b, expected) => {
+    expect(genDiff(a, b)).toBe(expected);
+  },
+);
