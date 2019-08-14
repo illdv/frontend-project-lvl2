@@ -1,90 +1,71 @@
-import { has, union, isObject } from 'lodash';
-import parser from './parsers';
+import { has, isObject, identity } from 'lodash';
+import parseInputData from './parsers';
+import buildDiff from './buildDiff';
 
-
-const propertyOperations = [
+const findDiffType = (key, data1, data2, level) => ([
   {
-    operation: (key, data1, data2) => ({
-      type: 'added',
-      sign: '+',
-      key,
-      value: data2[key],
-    }),
-    check: (data1, data2, key) => !has(data1, key) && has(data2, key),
-  },
-  {
-    operation: (key, data1) => ({
-      type: 'deleted',
-      sign: '-',
-      key,
-      value: data1[key],
-
-    }),
-    check: (data1, data2, key) => has(data1, key) && !has(data2, key),
-  },
-  {
-    check: (data1, data2, key) => has(data1, key) && has(data2, key)
-    && isObject(data1[key]) && isObject(data2[key]),
-    operation: (key, data1, data2, process) => ({
-      type: 'nested',
-      sign: ' ',
-      key,
-      children: process(data1[key], data2[key]),
+    type: 'nested',
+    check: isObject(data1[key]) && isObject(data2[key]),
+    process: fn => ({
+      children: fn(data1[key], data2[key], level + 1),
+      level,
     }),
   },
   {
-    check: (data1, data2, key) => has(data1, key) && has(data2, key)
+    type: 'added',
+    check: !has(data1, key) && has(data2, key),
+    process: () => ({
+      value: identity(data2[key]),
+      level,
+    }),
+  },
+  {
+    type: 'deleted',
+    check: has(data1, key) && !has(data2, key),
+    process: () => ({
+      value: identity(data1[key]),
+      level,
+    }),
+  },
+
+  {
+    type: 'updated',
+    check: has(data1, key) && has(data2, key)
     && data1[key] !== data2[key],
-    operation: (key, data1, data2) => ({
-      type: 'updated',
-      key,
-      values: [data2[key], data1[key]],
-      signs: ['+', '-'],
+    process: () => ({
+      value: { first: data1[key], second: data2[key] },
+      level,
     }),
   },
   {
-    check: (data1, data2, key) => has(data1, key) && has(data2, key)
+    type: 'saved',
+    check: has(data1, key) && has(data2, key)
     && data1[key] === data2[key],
-    operation: (key, data1) => ({
-      type: 'saved',
-      sign: ' ',
-      key,
-      value: data1[key],
+    process: () => ({
+      value: identity(data1[key]),
+      level,
     }),
   },
+]);
 
-];
 
-const getProperty = (data1, data2, key) => propertyOperations
-  .find(({ check }) => check(data1, data2, key));
-
-const buildAst = (data1, data2) => {
-  const joinData = union(Object.keys(data1), Object.keys(data2));
-  const ast = joinData.map(key => getProperty(data1, data2, key).operation(key, data1, data2, buildAst));
+const parse = (data1, data2, deepLevel = 0) => {
+  const joinData = Object.keys({ ...data1, ...data2 }).sort();
+  const ast = joinData.map((key) => {
+    const { type, process } = findDiffType(key, data1, data2, deepLevel)
+      .find(({ check }) => check);
+    const { value, level, children } = process(parse);
+    return {
+      type, level, key, value, children,
+    };
+  });
   return ast;
 };
-const getValues = (signs, values, buildLine) => values
-  .map((value, index) => buildLine(signs[index], value));
-const buildLine = key => (sign, value) => `  ${sign} ${key}: ${value}`;
 
-const render = (data) => {
-  console.log(data);
-  const result = data
-    .reduce((acc, {
-      type, key, sign, signs, value, values, children,
-    }) => {
-      if (type === 'nested') {
-        render(children);
-      }
-      const bindKey = buildLine(key);
-      return [...acc, type === 'updated'
-        ? [...getValues(signs, values, bindKey)]
-        : bindKey(sign, value)];
-    }, []);
-  return `{\n${[...result]}\n}`.replace(/,/gi, '\n');
-};
 
 export default (pathToFile1, pathToFile2) => {
-  const ast = buildAst(...parser([pathToFile1, pathToFile2]));
-  return render(ast);
+  const foo = parse(...parseInputData([pathToFile1, pathToFile2]));
+  console.log(JSON.stringify(foo, null, 2));
+  const foo1 = buildDiff(foo);
+  return `{\n${foo1.join('\n')}\n}`;
 };
