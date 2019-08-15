@@ -1,8 +1,7 @@
 import genDiff from '../src';
 
 
-const actual = `
-{
+const actual = `{
   common: {
     + follow: false
       setting1: Value 1
@@ -35,8 +34,7 @@ const actual = `
 + group3: {
       fee: 100500
   }
-}
-`;
+}`;
 
 const jsonData = [
   `${__dirname}/__fixtures__/before.json`,
