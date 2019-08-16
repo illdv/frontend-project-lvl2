@@ -31,7 +31,7 @@ const findDiffType = (key, data1, data2) => ([
     check: has(data1, key) && has(data2, key)
     && data1[key] !== data2[key],
     process: () => ({
-      value: { first: data1[key], second: data2[key] },
+      value: [data1[key], data2[key]],
     }),
   },
   {
@@ -50,9 +50,9 @@ const parse = (data1, data2) => {
   const ast = joinData.map((key) => {
     const { type, process } = findDiffType(key, data1, data2)
       .find(({ check }) => check);
-    const { value, level, children } = process(parse);
+    const { value, children } = process(parse);
     return {
-      type, level, key, value, children,
+      type, key, value, children,
     };
   });
   return ast;
@@ -62,6 +62,5 @@ const parse = (data1, data2) => {
 export default (pathToFile1, pathToFile2) => {
   const foo = parse(...parseInputData([pathToFile1, pathToFile2]));
   const foo1 = buildDiff(foo);
-  console.log(foo1);
-  return `{\n${foo1}\n}`;
+  return foo1;
 };
