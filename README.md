@@ -18,4 +18,6 @@ demo for json
 demo for yaml
 [![asciicast](https://asciinema.org/a/sTYw0HVciBIGz7QbEIl66jCuQ.svg)](https://asciinema.org/a/sTYw0HVciBIGz7QbEIl66jCuQ)
 demo for ini
-[![asciicast](https://asciinema.org/a/DR2KKIZEEsBslNLIjw16kY2oM.svg)](https://asciinema.org/a/DR2KKIZEEsBslNLIjw16kY2oM)
+[![asciicast](https://asciinema.org/a/DR2KKIZEEsBslNLIjw16kY2oM.svg)](https://asciinema.org/a/DR2KKIZEEsBslNLIjw16kY2oM
+demo for tree 
+[![asciicast](https://asciinema.org/a/25Ji8JlJzwN3auE9nETAsGU12.svg)](https://asciinema.org/a/25Ji8JlJzwN3auE9nETAsGU12)

@@ -9,6 +9,6 @@ program
   .description(`${description}`)
   .arguments('<firstConfig> <secondConfig>')
   .version(`${version}`, '-v, --version')
-  .option('-f, --format [type]', 'Output format')
-  .action((file1, file2) => console.log(gendiff(file1, file2)));
+  .option('-f, --format [type]', 'Output format', 'tree')
+  .action((file1, file2) => console.log(gendiff(file1, file2, program.format)));
 program.parse(process.argv);
