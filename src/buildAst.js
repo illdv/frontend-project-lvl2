@@ -28,7 +28,8 @@ const findDiffType = (key, data1, data2) => ([
     check: has(data1, key) && has(data2, key)
     && data1[key] !== data2[key],
     process: () => ({
-      value: [data1[key], data2[key]],
+      beforeValue: data1[key],
+      afterValue: data2[key],
     }),
   },
   {
@@ -47,9 +48,8 @@ const buildAst = (data1, data2) => {
   return joinData.map((key) => {
     const { type, process } = findDiffType(key, data1, data2)
       .find(({ check }) => check);
-    const { value, children } = process(buildAst);
     return {
-      type, key, value, children,
+      type, key, ...process(buildAst),
     };
   });
 };

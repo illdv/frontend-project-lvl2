@@ -9,23 +9,24 @@ const buildValue = (data, gap) => {
   return `{\n${entriesString}\n${addedGap(gap + 2)}}`;
 };
 
-const stringify = (key, value, gap, sign = ' ') => {
+const buildLine = (key, value, gap, sign = ' ') => {
   const newValue = isObject(value) ? buildValue(value, gap) : value;
   return `${addedGap(gap)}${sign} ${key}: ${newValue}`;
 };
 
 const typeDiff = (key, gap) => ({
-  nested: ({ children }, fn) => stringify(key, fn(children, gap + 4), gap),
-  added: ({ value }) => stringify(key, value, gap, '+'),
-  deleted: ({ value }) => stringify(key, value, gap, '-'),
-  updated: ({ value: values }) => values.map((value, index) => {
+  nested: ({ children }, fn) => buildLine(key, fn(children, gap + 4), gap),
+  added: ({ value }) => buildLine(key, value, gap, '+'),
+  deleted: ({ value }) => buildLine(key, value, gap, '-'),
+  updated: ({ afterValue, beforeValue }) => {
     const signs = ['-', '+'];
-    return `${stringify(key, value, gap, signs[index])}`;
-  }).join('\n'),
-  saved: ({ value }) => `${stringify(key, value, gap)}`,
+    return [beforeValue, afterValue]
+      .map((value, index) => `${buildLine(key, value, gap, signs[index])}`).join('\n');
+  },
+  saved: ({ value }) => `${buildLine(key, value, gap)}`,
 });
 
-const toTree = (data, gap = 0) => {
+const toTree = (data, gap = 2) => {
   const result = data
     .map(({ type, key, ...args }) => {
       const selectedDiff = typeDiff(key, gap)[type];

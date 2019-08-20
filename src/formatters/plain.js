@@ -15,7 +15,7 @@ const buildLine = keyPath => ({
   nested: ({ children }, fn) => fn(children, `${keyPath}.`),
   added: ({ value }) => `Property '${keyPath}' was added with value: ${determineTypeValue(value)}`,
   deleted: () => `Property '${keyPath}' was removed`,
-  updated: ({ value: [value1, value2] }) => `Property '${keyPath}' was updated. From ${determineTypeValue(value1)} to ${determineTypeValue(value2)}`,
+  updated: ({ beforeValue, afterValue }) => `Property '${keyPath}' was updated. From ${determineTypeValue(beforeValue)} to ${determineTypeValue(afterValue)}`,
   saved: () => '',
 });
 

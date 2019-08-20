@@ -10,11 +10,7 @@ const makeTestData = format => ['json', 'yaml', 'ini'].map((expansion) => {
     expected,
   ];
 });
-
-test.each(makeTestData('tree'))('diff in tree:\n%p,\n%p', (a, b, expected) => {
-  expect(genDiff(a, b, 'tree')).toBe(expected);
-});
-
-test.each(makeTestData('plain'))('diff in plain:\n%p,\n%p', (a, b, expected) => {
-  expect(genDiff(a, b, 'plain')).toBe(expected);
-});
+['tree', 'plain', 'json']
+  .map(format => test.each(makeTestData(format))(`diff in ${format}:\n%p,\n%p`, (a, b, expected) => {
+    expect(genDiff(a, b, format)).toBe(expected);
+  }));
