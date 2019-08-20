@@ -21,3 +21,5 @@ demo for ini
 [![asciicast](https://asciinema.org/a/DR2KKIZEEsBslNLIjw16kY2oM.svg)](https://asciinema.org/a/DR2KKIZEEsBslNLIjw16kY2oM
 demo for tree 
 [![asciicast](https://asciinema.org/a/25Ji8JlJzwN3auE9nETAsGU12.svg)](https://asciinema.org/a/25Ji8JlJzwN3auE9nETAsGU12)
+demo for plain
+[![asciicast](https://asciinema.org/a/e0V9bmAJIi26Gb2SASGuujC88.svg)](https://asciinema.org/a/e0V9bmAJIi26Gb2SASGuujC88)

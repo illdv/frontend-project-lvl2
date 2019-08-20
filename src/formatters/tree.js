@@ -14,7 +14,6 @@ const stringify = (key, value, gap, sign = ' ') => {
   return `${addedGap(gap)}${sign} ${key}: ${newValue}`;
 };
 
-
 const typeDiff = (key, gap) => ({
   nested: ({ children }, fn) => stringify(key, fn(children, gap + 4), gap),
   added: ({ value }) => stringify(key, value, gap, '+'),
@@ -26,12 +25,12 @@ const typeDiff = (key, gap) => ({
   saved: ({ value }) => `${stringify(key, value, gap)}`,
 });
 
-const buildDiff = (data, gap = 0) => {
+const toTree = (data, gap = 0) => {
   const result = data
     .map(({ type, key, ...args }) => {
       const selectedDiff = typeDiff(key, gap)[type];
-      return selectedDiff(args, buildDiff);
+      return selectedDiff(args, toTree);
     }).join('\n');
   return `{\n${result}\n${addedGap(gap === 0 ? gap : gap - 2)}}`;
 };
-export default buildDiff;
+export default toTree;
