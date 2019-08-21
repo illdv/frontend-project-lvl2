@@ -1,14 +1,15 @@
+import { has } from 'lodash';
 import toPlain from './plain';
 import toTree from './tree';
 import toJson from './json';
 
 
 export default (format, data) => {
-  const typeFormat = {
+  const typesOfFormats = {
     plain: toPlain,
     tree: toTree,
     json: toJson,
   };
   const messageUndefinedFormat = new Error(`${format} not known. Supported formats: plain/json/tree(default).`);
-  return typeFormat[format](data) || messageUndefinedFormat;
+  return has(typesOfFormats, format) ? typesOfFormats[format](data) : messageUndefinedFormat;
 };

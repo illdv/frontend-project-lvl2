@@ -1,55 +1,43 @@
 import { has, isObject, identity } from 'lodash';
 
-const findDiffType = (key, data1, data2) => ([
+const dataTypes = [
   {
     type: 'nested',
-    check: isObject(data1[key]) && isObject(data2[key]),
-    process: fn => ({
-      children: fn(data1[key], data2[key]),
-    }),
+    check: (key, data1, data2) => isObject(data1[key]) && isObject(data2[key]),
+    getNodeValue: (oldValue, newValue, fn) => fn(oldValue, newValue),
   },
   {
     type: 'added',
-    check: !has(data1, key) && has(data2, key),
-    process: () => ({
-      value: identity(data2[key]),
-    }),
+    check: (key, data1, data2) => !has(data1, key) && has(data2, key),
+    getNodeValue: (oldValue, newValue) => identity(newValue),
   },
   {
     type: 'deleted',
-    check: has(data1, key) && !has(data2, key),
-    process: () => ({
-      value: identity(data1[key]),
-    }),
+    check: (key, data1, data2) => has(data1, key) && !has(data2, key),
+    getNodeValue: oldValue => identity(oldValue),
   },
-
   {
     type: 'updated',
-    check: has(data1, key) && has(data2, key)
+    check: (key, data1, data2) => has(data1, key) && has(data2, key)
     && data1[key] !== data2[key],
-    process: () => ({
-      beforeValue: data1[key],
-      afterValue: data2[key],
-    }),
+    getNodeValue: (oldValue, newValue) => ({ oldValue, newValue }),
   },
   {
-    type: 'saved',
-    check: has(data1, key) && has(data2, key)
+    type: 'unchanged',
+    check: (key, data1, data2) => has(data1, key) && has(data2, key)
     && data1[key] === data2[key],
-    process: () => ({
-      value: identity(data1[key]),
-    }),
+    getNodeValue: oldValue => identity(oldValue),
   },
-]);
+];
 
 
 const buildAst = (data1, data2) => {
   const joinData = Object.keys({ ...data1, ...data2 }).sort();
   return joinData.map((key) => {
-    const { type, process } = findDiffType(key, data1, data2)
-      .find(({ check }) => check);
+    const { type, getNodeValue } = dataTypes.find(({ check }) => check(key, data1, data2));
+    const value = getNodeValue(data1[key], data2[key], buildAst);
     return {
-      type, key, ...process(buildAst),
+      name: key, value, type,
     };
   });
 };

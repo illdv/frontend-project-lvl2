@@ -11,18 +11,19 @@ const determineTypeValue = (value) => {
   return value;
 };
 
-const buildLine = keyPath => ({
-  nested: ({ children }, fn) => fn(children, `${keyPath}.`),
-  added: ({ value }) => `Property '${keyPath}' was added with value: ${determineTypeValue(value)}`,
-  deleted: () => `Property '${keyPath}' was removed`,
-  updated: ({ beforeValue, afterValue }) => `Property '${keyPath}' was updated. From ${determineTypeValue(beforeValue)} to ${determineTypeValue(afterValue)}`,
-  saved: () => '',
-});
+const buildLine = {
+  nested: ({ value, namePath, toPlain }) => toPlain(value, `${namePath}.`),
+  added: ({ value, namePath }) => `Property '${namePath}' was added with value: ${determineTypeValue(value)}`,
+  deleted: ({ namePath }) => `Property '${namePath}' was removed`,
+  updated: ({ value: { oldValue, newValue }, namePath }) => `Property '${namePath}' was updated. From ${determineTypeValue(oldValue)} to ${determineTypeValue(newValue)}`,
+  unchanged: () => '',
+};
 
 const toPlain = (data, path = '') => {
   const result = data.map(({ type, ...args }) => {
-    const selectedDiff = buildLine(path + args.key)[type];
-    return selectedDiff({ ...args }, toPlain);
+    const namePath = path + args.name;
+    const nodeData = { ...args, namePath, toPlain };
+    return buildLine[type](nodeData);
   });
   return result.filter(r => r).join('\n');
 };
