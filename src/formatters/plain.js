@@ -15,8 +15,11 @@ const buildLine = {
   nested: ({ value, namePath, toPlain }) => toPlain(value, `${namePath}.`),
   added: ({ value, namePath }) => `Property '${namePath}' was added with value: ${determineTypeValue(value)}`,
   deleted: ({ namePath }) => `Property '${namePath}' was removed`,
-  updated: ({ value: { oldValue, newValue }, namePath }) => `Property '${namePath}' was updated. From ${determineTypeValue(oldValue)} to ${determineTypeValue(newValue)}`,
-  unchanged: () => '',
+  updated: ({ value, namePath }) => {
+    const { oldValue, newValue } = value;
+    return `Property '${namePath}' was updated. From ${determineTypeValue(oldValue)} to ${determineTypeValue(newValue)}`;
+  },
+  unchanged: () => null,
 };
 
 const toPlain = (data, path = '') => {

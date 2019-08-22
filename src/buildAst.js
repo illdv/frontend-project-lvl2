@@ -1,4 +1,4 @@
-import { has, isObject, identity } from 'lodash';
+import { has, isObject } from 'lodash';
 
 const dataTypes = [
   {
@@ -9,12 +9,12 @@ const dataTypes = [
   {
     type: 'added',
     check: (key, data1, data2) => !has(data1, key) && has(data2, key),
-    getNodeValue: (oldValue, newValue) => identity(newValue),
+    getNodeValue: (oldValue, newValue) => newValue,
   },
   {
     type: 'deleted',
     check: (key, data1, data2) => has(data1, key) && !has(data2, key),
-    getNodeValue: oldValue => identity(oldValue),
+    getNodeValue: oldValue => oldValue,
   },
   {
     type: 'updated',
@@ -26,7 +26,7 @@ const dataTypes = [
     type: 'unchanged',
     check: (key, data1, data2) => has(data1, key) && has(data2, key)
     && data1[key] === data2[key],
-    getNodeValue: oldValue => identity(oldValue),
+    getNodeValue: oldValue => oldValue,
   },
 ];
 

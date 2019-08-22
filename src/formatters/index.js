@@ -1,8 +1,11 @@
-import { has } from 'lodash';
 import toPlain from './plain';
 import toTree from './tree';
 import toJson from './json';
 
+const printMessage = (e, message) => {
+  console.log(message);
+  return e;
+};
 
 export default (format, data) => {
   const typesOfFormats = {
@@ -10,6 +13,9 @@ export default (format, data) => {
     tree: toTree,
     json: toJson,
   };
-  const messageUndefinedFormat = new Error(`${format} not known. Supported formats: plain/json/tree(default).`);
-  return has(typesOfFormats, format) ? typesOfFormats[format](data) : messageUndefinedFormat;
+  try {
+    return typesOfFormats[format](data);
+  } catch (e) {
+    throw printMessage(e, `${format} not known. Supported formats: plain/json/tree(default).`);
+  }
 };

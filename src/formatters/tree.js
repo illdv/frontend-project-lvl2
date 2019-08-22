@@ -1,4 +1,4 @@
-import { isObject } from 'lodash';
+import { isObject, flattenDeep } from 'lodash';
 
 
 const addedGap = num => ' '.repeat(num);
@@ -21,10 +21,11 @@ const getTypeDiff = {
   added: ({ name, value, gap }) => buildLine(name, value, gap, '+'),
   deleted: ({ name, value, gap }) => buildLine(name, value, gap, '-'),
   updated: ({
-    name, value: { oldValue, newValue }, gap,
+    name, value, gap,
   }) => {
     const signs = ['-', '+'];
-    return [oldValue, newValue].map((value, index) => `${buildLine(name, value, gap, signs[index])}`).join('\n');
+    const { oldValue, newValue } = value;
+    return [oldValue, newValue].map((element, index) => `${buildLine(name, element, gap, signs[index])}`);
   },
   unchanged: ({ name, value, gap }) => `${buildLine(name, value, gap)}`,
 };
@@ -33,7 +34,8 @@ const toTree = (data, gap = 2) => {
   const result = data.map(({ type, ...args }) => {
     const nodeData = { ...args, gap, toTree };
     return getTypeDiff[type](nodeData);
-  }).join('\n');
-  return `{\n${result}\n${addedGap(gap === 0 ? gap : gap - 2)}}`;
+  });
+  const lineByLine = flattenDeep(result).join('\n');
+  return `{\n${lineByLine}\n${addedGap(gap === 0 ? gap : gap - 2)}}`;
 };
 export default toTree;
