@@ -12,20 +12,17 @@ const determineTypeValue = (value) => {
 };
 
 const buildLine = {
-  nested: ({ value, namePath, toPlain }) => toPlain(value, `${namePath}.`),
-  added: ({ value, namePath }) => `Property '${namePath}' was added with value: ${determineTypeValue(value)}`,
-  deleted: ({ namePath }) => `Property '${namePath}' was removed`,
-  updated: ({ value, namePath }) => {
-    const { oldValue, newValue } = value;
-    return `Property '${namePath}' was updated. From ${determineTypeValue(oldValue)} to ${determineTypeValue(newValue)}`;
-  },
+  nested: ({ children, pathName, toPlain }) => toPlain(children, `${pathName}.`),
+  added: ({ newValue, pathName }) => `Property '${pathName}' was added with value: ${determineTypeValue(newValue)}`,
+  deleted: ({ pathName }) => `Property '${pathName}' was removed`,
+  updated: ({ oldValue, newValue, pathName }) => `Property '${pathName}' was updated. From ${determineTypeValue(oldValue)} to ${determineTypeValue(newValue)}`,
   unchanged: () => null,
 };
 
 const toPlain = (data, path = '') => {
   const result = data.map(({ type, ...args }) => {
-    const namePath = path + args.name;
-    const nodeData = { ...args, namePath, toPlain };
+    const pathName = path + args.name;
+    const nodeData = { ...args, pathName, toPlain };
     return buildLine[type](nodeData);
   });
   return result.filter(r => r).join('\n');

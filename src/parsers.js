@@ -3,7 +3,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const extensions = {
+const formats = {
   json: JSON.parse,
   yaml: yaml.safeLoad,
   ini: ini.parse,
@@ -11,6 +11,6 @@ const extensions = {
 
 export default (filePath) => {
   const extension = path.extname(filePath).substring(1);
-  const data = fs.readFileSync(filePath, { encoding: 'utf-8' });
-  return extensions[extension](data);
+  const contentFile = fs.readFileSync(filePath, { encoding: 'utf-8' });
+  return formats[extension](contentFile);
 };
