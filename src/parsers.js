@@ -7,4 +7,4 @@ const formats = {
   ini: ini.parse,
 };
 
-export default contents => contents.map(({ extension, body }) => formats[extension](body));
+export default ({ extension, body }) => formats[extension](body);
