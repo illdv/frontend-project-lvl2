@@ -2,10 +2,6 @@ import toPlain from './plain';
 import toTree from './tree';
 import toJson from './json';
 
-const printMessage = (e, message) => {
-  console.log(message);
-  return e;
-};
 
 export default (format, data) => {
   const typesOfFormats = {
@@ -14,8 +10,8 @@ export default (format, data) => {
     json: toJson,
   };
   try {
-    return typesOfFormats[format](data);
+    return typesOfFormats[format + 1](data);
   } catch (e) {
-    throw printMessage(e, `${format} not known. Supported formats: plain/json/tree(default).`);
+    throw new Error(`${format} not known. Supported formats: plain/json/tree(default).`);
   }
 };
