@@ -10,7 +10,7 @@ export default (format, data) => {
     json: toJson,
   };
   try {
-    return typesOfFormats[format + 1](data);
+    return typesOfFormats[format](data);
   } catch (e) {
     throw new Error(`${format} not known. Supported formats: plain/json/tree(default).`);
   }
