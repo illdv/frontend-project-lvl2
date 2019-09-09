@@ -1,7 +1,7 @@
 import { isObject, isString } from 'lodash';
 
 
-const determineTypeValue = (value) => {
+const stringify = (value) => {
   if (isObject(value)) {
     return '[complex value]';
   }
@@ -13,9 +13,9 @@ const determineTypeValue = (value) => {
 
 const buildLine = {
   nested: ({ children, pathName, toPlain }) => toPlain(children, `${pathName}.`),
-  added: ({ newValue, pathName }) => `Property '${pathName}' was added with value: ${determineTypeValue(newValue)}`,
+  added: ({ newValue, pathName }) => `Property '${pathName}' was added with value: ${stringify(newValue)}`,
   deleted: ({ pathName }) => `Property '${pathName}' was removed`,
-  updated: ({ oldValue, newValue, pathName }) => `Property '${pathName}' was updated. From ${determineTypeValue(oldValue)} to ${determineTypeValue(newValue)}`,
+  updated: ({ oldValue, newValue, pathName }) => `Property '${pathName}' was updated. From ${stringify(oldValue)} to ${stringify(newValue)}`,
   unchanged: () => null,
 };
 
